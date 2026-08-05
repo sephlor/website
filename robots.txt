@@ -1,0 +1,77 @@
+# robots.txt — https://stevenjtaylor.com
+# Search engines are welcome so the site stays findable; AI training and
+# scraping crawlers are asked to stay out.
+#
+# NOTE: robots.txt is advisory. Reputable crawlers (Google, Bing, and the major
+# AI companies below) honor it, but it does NOT block access — enforcement is
+# handled at the edge via Cloudflare's "Block AI bots" setting.
+
+# Default: everyone not listed below may crawl (keeps the site in search).
+User-agent: *
+Allow: /
+
+# --- AI / LLM training and scraping crawlers: opt out ---
+# (Googlebot and Applebot for *search* are unaffected — only their AI-training
+#  tokens, Google-Extended and Applebot-Extended, are disallowed here.)
+
+User-agent: GPTBot
+Disallow: /
+
+User-agent: OAI-SearchBot
+Disallow: /
+
+User-agent: ChatGPT-User
+Disallow: /
+
+User-agent: ClaudeBot
+Disallow: /
+
+User-agent: anthropic-ai
+Disallow: /
+
+User-agent: Claude-Web
+Disallow: /
+
+User-agent: Google-Extended
+Disallow: /
+
+User-agent: Applebot-Extended
+Disallow: /
+
+User-agent: CCBot
+Disallow: /
+
+User-agent: PerplexityBot
+Disallow: /
+
+User-agent: Perplexity-User
+Disallow: /
+
+User-agent: Bytespider
+Disallow: /
+
+User-agent: Amazonbot
+Disallow: /
+
+User-agent: Meta-ExternalAgent
+Disallow: /
+
+User-agent: FacebookBot
+Disallow: /
+
+User-agent: cohere-ai
+Disallow: /
+
+User-agent: Diffbot
+Disallow: /
+
+User-agent: Omgilibot
+Disallow: /
+
+User-agent: ImagesiftBot
+Disallow: /
+
+User-agent: YouBot
+Disallow: /
+
+Sitemap: https://stevenjtaylor.com/sitemap.xml

@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Projects — Steven Taylor</title>
+    <meta
+      name="description"
+      content="Projects by Steven Taylor — what they do, the decisions behind them, and links to code."
+    />
+    <link rel="canonical" href="https://stevenjtaylor.com/projects/" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="wrap">
+        <a class="brand" href="/">Steven Taylor</a>
+        <nav class="nav">
+          <a href="/">Home</a>
+          <a href="/projects/" aria-current="page">Projects</a>
+        </nav>
+      </div>
+    </header>
+
+    <main>
+      <div class="wrap">
+        <section>
+          <h1>Projects</h1>
+          <p class="lead">
+            Things I'm building, experimenting with, and learning.
+          </p>
+        </section>
+
+        <hr class="divider" />
+
+        <div class="card-grid">
+          <a class="card" href="/projects/barkive/">
+            <img
+              class="thumb"
+              src="/images/barkive-timeline.png"
+              alt="barkive bark-timeline dashboard"
+              loading="lazy"
+            />
+            <h3>🐕 Barkive</h3>
+            <p class="muted">
+              A from-scratch dog-bark detector built on Google's YAMNet, with a
+              batch report and a live camera dashboard. Detects barks, howls,
+              growls and more, each with a measured volume and confidence.
+            </p>
+            <div class="tags">
+              <span class="tag">Python</span>
+              <span class="tag">TensorFlow / YAMNet</span>
+              <span class="tag">Flask</span>
+              <span class="tag">SQLite</span>
+              <span class="tag">ffmpeg</span>
+              <span class="tag">HLS</span>
+              <span class="tag">Cloudflare Tunnel</span>
+            </div>
+          </a>
+
+          <a class="card" href="/projects/grounding/">
+            <img
+              class="thumb cover"
+              src="/images/grounding-kite.jpg"
+              alt="Kitesurfing"
+              loading="lazy"
+            />
+            <h3>🪁 Grounding</h3>
+            <p class="muted">
+              A wind-forecast tool for kitesurfing spots that grounds an LLM's
+              answers in real data, and resolves the folk names of spots to
+              launch-accurate coordinates. Early / work in progress.
+            </p>
+            <div class="tags">
+              <span class="tag">Python</span>
+              <span class="tag">MCP</span>
+              <span class="tag">NLP</span>
+              <span class="tag">SQLite</span>
+              <span class="tag">Open-Meteo</span>
+            </div>
+          </a>
+        </div>
+      </div>
+    </main>
+
+    <footer class="site-footer">
+      <div class="wrap">
+        <span>© 2026 Steven Taylor</span>
+      </div>
+    </footer>
+  </body>
+</html>

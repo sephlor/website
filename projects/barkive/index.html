@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>barkive — Steven Taylor</title>
+    <meta
+      name="description"
+      content="barkive — a from-scratch dog-bark detector built on YAMNet, with a batch report and a live camera dashboard."
+    />
+    <link rel="canonical" href="https://stevenjtaylor.com/projects/barkive/" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="wrap">
+        <a class="brand" href="/">Steven Taylor</a>
+        <nav class="nav">
+          <a href="/">Home</a>
+          <a href="/projects/" aria-current="page">Projects</a>
+        </nav>
+      </div>
+    </header>
+
+    <main>
+      <div class="wrap">
+        <a class="back-link" href="/projects/">← All projects</a>
+
+        <section id="barkive">
+          <h1>🐕 Barkive</h1>
+          <p class="muted" style="margin-top: -0.25rem; font-size: 0.9rem">
+            Work in progress · v1
+          </p>
+
+          <a
+            class="arrow-link"
+            href="https://barkive.ai"
+            target="_blank"
+            rel="noopener"
+            style="margin-bottom: 0.75rem"
+          >
+            Visit barkive.ai
+            <span class="arrow" aria-hidden="true">→</span>
+          </a>
+
+          <p>
+            I wanted both a lasting record of how much my dog barks and live
+            remote access while I'm out. Instead of starting from an existing NVR
+            like Frigate, I built the detection pipeline from scratch around
+            Google's YAMNet sound classifier, so I understood every trade-off in
+            it.
+          </p>
+          <p>
+            The camera's audio runs through YAMNet, which recognizes barks along
+            with yips, howls, growls, and whimpers, and scores each one for
+            volume and confidence. Every event is timestamped and saved, and the
+            dashboards are interactive. It also
+            listens for the doorbell chime in that same audio and marks it on the
+            timeline, so a barking spell can be tied back to someone at the door.
+            That part is still under development and throws the occasional false
+            positive.
+          </p>
+          <p>
+            I intentionally keep recording sensitivity and
+            display sensitivity separate. Everything is recorded at a low
+            threshold and the browser filters the view, so I can always look
+            stricter without ever losing data.
+          </p>
+          <p>
+            Everything lives on a Mac at home. Detection runs offline in
+            near-real-time, and both the live camera view and the history are
+            served through a Cloudflare Tunnel.
+          </p>
+
+          <figure class="shot">
+            <img
+              src="/images/barkive-timeline.png"
+              alt="barkive timeline: a zoomable, color-coded timeline of every detected bark"
+              loading="lazy"
+            />
+            <figcaption>
+              The batch report: a zoomable timeline of every detected bark,
+              colored by sound type and sized by loudness.
+            </figcaption>
+          </figure>
+
+          <figure class="shot">
+            <img
+              src="/images/barkive-breakdown.png"
+              alt="barkive breakdown of barks by sound type and by volume"
+              loading="lazy"
+            />
+            <figcaption>
+              Every event broken down by sound type and by loudness.
+            </figcaption>
+          </figure>
+
+          <figure class="shot">
+            <img
+              src="/images/barkive-table.png"
+              alt="barkive event log listing each bark with time, duration, type, volume, and confidence"
+              loading="lazy"
+            />
+            <figcaption>
+              A searchable log of each event with duration, type, volume (dBFS),
+              and model confidence.
+            </figcaption>
+          </figure>
+
+          <p>
+            Raw events are only half the story — a day can hold hundreds of
+            them. The history view rolls them up two ways so a whole day reads at
+            a glance.
+          </p>
+
+          <p>
+            <strong>Barking activity</strong> counts barks per minute across the
+            day and follows whatever window the timeline is zoomed to. Quiet
+            stretches flatten out and the real flare-ups stand up as spikes, so
+            it's obvious when the barking actually happened — the dashed markers
+            line up with detected doorbell rings.
+          </p>
+
+          <figure class="shot">
+            <img
+              src="/images/barkive-activity.png"
+              alt="barkive barking-activity chart: barks per minute across the day, with tall spikes during flare-ups"
+              loading="lazy"
+            />
+            <figcaption>
+              Barking activity — barks per minute, so busy spells stand out from
+              quiet ones.
+            </figcaption>
+          </figure>
+
+          <p>
+            <strong>Bark spurts</strong> group the day into bursts — five or more
+            barks with no gap longer than 30 seconds — and rate each one minor,
+            moderate, or severe by how long it ran. It turns a wall of individual
+            events into a short list of episodes I can actually scan: when it
+            started, how long it lasted, how many barks, and what kind. Tapping a
+            row zooms the timeline to that burst.
+          </p>
+
+          <figure class="shot">
+            <img
+              src="/images/barkive-spurts.png"
+              alt="barkive bark-spurts list: each burst of 5+ barks with its start time, severity, duration, bark count, and dominant type"
+              loading="lazy"
+            />
+            <figcaption>
+              Bark spurts — each burst of 5+ barks with its severity, duration,
+              count, and dominant sound type.
+            </figcaption>
+          </figure>
+
+          <div class="tags" style="margin-top: 1.25rem">
+            <span class="tag">Python</span>
+            <span class="tag">TensorFlow / YAMNet</span>
+            <span class="tag">Flask</span>
+            <span class="tag">SQLite</span>
+            <span class="tag">ffmpeg</span>
+            <span class="tag">HLS</span>
+            <span class="tag">Cloudflare Tunnel</span>
+          </div>
+        </section>
+      </div>
+    </main>
+
+    <footer class="site-footer">
+      <div class="wrap">
+        <span>© 2026 Steven Taylor</span>
+      </div>
+    </footer>
+  </body>
+</html>
