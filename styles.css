@@ -452,3 +452,312 @@ figure.shot img.cover {
     padding: 2.5rem 0 3rem;
   }
 }
+
+/* ---------- Numbered / plain prose lists ---------- */
+.prose-list {
+  margin: 0 0 1rem;
+  padding-left: 1.2rem;
+}
+
+.prose-list li {
+  margin-bottom: 0.6rem;
+}
+
+/* ---------- Side-by-side comparison ---------- */
+.compare {
+  display: grid;
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+@media (min-width: 44rem) {
+  .compare {
+    grid-template-columns: 1fr 1fr;
+    align-items: start;
+  }
+}
+
+.panel {
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--card-bg);
+  padding: 1.1rem 1.2rem 1.2rem;
+}
+
+.panel.highlight {
+  border-color: var(--accent);
+}
+
+.panel-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-bottom: 0.9rem;
+}
+
+.panel-head h3 {
+  margin: 0;
+  font-size: 0.95rem;
+}
+
+.panel-head .time {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  white-space: nowrap;
+}
+
+/* ---------------------------------------------------------------------------
+   Mock chat screenshots. These keep a fixed dark palette in both site themes,
+   because they stand in for screenshots of a dark-themed chat client.
+   --------------------------------------------------------------------------- */
+.chat {
+  --chat-bg: #1b1b19;
+  --chat-line: #302f2b;
+  --chat-text: #eae7e1;
+  --chat-muted: #9d9a93;
+  --chat-code-bg: #131312;
+  --json-key: #f2779a;
+  --json-str: #8bd196;
+  --json-num: #86b2f0;
+
+  background: var(--chat-bg);
+  border: 1px solid var(--chat-line);
+  border-radius: 10px;
+  padding: 0.85rem 0.9rem 0.95rem;
+  color: var(--chat-text);
+}
+
+/* The person's turn: a pill pushed to the right, as chat clients render it. */
+.chat .user {
+  max-width: 88%;
+  width: fit-content;
+  margin: 0 0 0.85rem auto;
+  padding: 0.4rem 0.7rem;
+  border-radius: 12px;
+  background: #2e2d2a;
+  font-size: 0.83rem;
+  line-height: 1.45;
+}
+
+.chat .tool {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin: 0 0 0.55rem;
+  font-size: 0.79rem;
+  color: var(--chat-muted);
+}
+
+.chat .tool .badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 15px;
+  height: 15px;
+  border-radius: 4px;
+  background: #3b6ef5;
+  color: #fff;
+  font-size: 0.6rem;
+  font-weight: 700;
+}
+
+.chat .tool .chev {
+  font-size: 0.8rem;
+  line-height: 1;
+  color: #8b8880;
+}
+
+.chat .reply {
+  font-family: ui-serif, "Iowan Old Style", "Palatino Linotype", Palatino,
+    Georgia, serif;
+  font-size: 0.89rem;
+  line-height: 1.55;
+}
+
+.chat .reply p {
+  margin: 0 0 0.6rem;
+}
+
+.chat .reply p:last-child {
+  margin-bottom: 0;
+}
+
+/* The attribution the tool response carries, as the model prints it. */
+.chat .reply .attrib {
+  margin-top: 0.85rem;
+  font-style: italic;
+  font-size: 0.82rem;
+  color: #c3bfb7;
+}
+
+.chat .reply .attrib a {
+  color: inherit;
+  text-decoration: underline;
+}
+
+/* Trails off, the way a long answer does past the edge of a screenshot. */
+.chat .reply .trail {
+  -webkit-mask-image: linear-gradient(to bottom, #000 35%, transparent 100%);
+  mask-image: linear-gradient(to bottom, #000 35%, transparent 100%);
+}
+
+.chat .jsonbox {
+  background: var(--chat-code-bg);
+  border: 1px solid #2b2a27;
+  border-radius: 8px;
+  padding: 0.55rem 0.7rem 0.6rem;
+  margin: 0 0 0.75rem;
+}
+
+.chat .jsonbox .lbl {
+  display: block;
+  font-size: 0.68rem;
+  color: #8b8880;
+  margin-bottom: 0.4rem;
+}
+
+.chat .jsonbox pre {
+  margin: 0;
+  overflow-x: auto;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 0.71rem;
+  line-height: 1.55;
+  color: #cfccc4;
+}
+
+.chat .k {
+  color: var(--json-key);
+}
+
+.chat .s {
+  color: var(--json-str);
+}
+
+.chat .n {
+  color: var(--json-num);
+}
+
+/* Mock weather widget — the pretty, unhelpful answer */
+.chat .wx {
+  border: 1px solid var(--chat-line);
+  border-radius: 10px;
+  overflow: hidden;
+  margin-bottom: 0.8rem;
+}
+
+.chat .wx-top {
+  background: linear-gradient(165deg, #7ba7d4, #adc9e6);
+  color: #fff;
+  padding: 0.7rem 0.8rem 0.6rem;
+}
+
+.chat .wx-top .place {
+  font-size: 0.64rem;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  opacity: 0.85;
+}
+
+.chat .wx-top .temp {
+  font-size: 1.7rem;
+  font-weight: 300;
+  line-height: 1.1;
+}
+
+.chat .wx-days {
+  display: flex;
+  background: #232320;
+}
+
+.chat .wx-days span {
+  flex: 1;
+  text-align: center;
+  padding: 0.35rem 0.1rem;
+  font-size: 0.66rem;
+  color: var(--chat-muted);
+  border-right: 1px solid var(--chat-line);
+}
+
+.chat .wx-days span:last-child {
+  border-right: 0;
+}
+
+/* A transcript runs several turns down one screenshot. */
+.transcript {
+  margin-top: 1.5rem;
+}
+
+.transcript .turn + .turn {
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px dashed var(--chat-line);
+}
+
+/* ---------- Code blocks ---------- */
+pre.code {
+  background: var(--bg-subtle);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 0.9rem 1rem;
+  margin: 1rem 0 0;
+  overflow-x: auto;
+  font-size: 0.8rem;
+  line-height: 1.5;
+}
+
+pre.code code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+}
+
+
+/* ---------- Small data table (traffic log) ---------- */
+.table-scroll {
+  overflow-x: auto;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  margin-top: 1.25rem;
+}
+
+table.log {
+  border-collapse: collapse;
+  width: 100%;
+  min-width: 32rem;
+  font-size: 0.76rem;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+}
+
+table.log th,
+table.log td {
+  text-align: left;
+  padding: 0.45rem 0.55rem;
+  white-space: nowrap;
+  border-bottom: 1px solid var(--border);
+}
+
+table.log thead th {
+  background: var(--bg-subtle);
+  color: var(--text-muted);
+  font-weight: 600;
+  font-size: 0.72rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+table.log tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+table.log td.num {
+  color: var(--text-muted);
+}
+
+/* A row the resolver was not confident about — the curation worklist. */
+table.log tr.weak td {
+  background: rgba(234, 179, 8, 0.09);
+}
+
+table.log tr.weak td.score {
+  font-weight: 700;
+}

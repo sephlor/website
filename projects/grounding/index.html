@@ -6,7 +6,7 @@
     <title>Grounding — Steven Taylor</title>
     <meta
       name="description"
-      content="Grounding — an early wind-forecast tool for kitesurfing spots that grounds LLM answers in real data and resolves spot names to launch-accurate coordinates."
+      content="Grounding — an MCP server that gives an LLM real wind forecasts for kitesurfing and sailing spots, resolving folk spot names to launch-accurate coordinates and answering in 1–2 seconds."
     />
     <link rel="canonical" href="https://stevenjtaylor.com/projects/grounding/" />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
@@ -30,7 +30,7 @@
         <section id="grounding">
           <h1>🪁 Grounding</h1>
           <p class="muted" style="margin-top: -0.25rem; font-size: 0.9rem">
-            Work in progress · pre-v1
+            Work in progress · v1
           </p>
 
           <a
@@ -43,7 +43,7 @@
             <span class="arrow" aria-hidden="true">→</span>
           </a>
           <p class="muted" style="margin-top: 0.4rem; font-size: 0.95rem">
-            <strong>Coming soon:</strong> instructions to try it out yourself.
+            <strong>Coming soon:</strong> Reach out for a link if want to try it now.
           </p>
 
           <figure class="shot">
@@ -56,23 +56,338 @@
           </figure>
 
           <p>
-            A wind-forecast tool for kitesurfing spots that grounds an LLM's
-            answers in real data instead of guesses. It resolves the folk names
-            kiters actually use, like "3rd Ave" or "the Racetrack", to the
-            launch-accurate coordinates where the forecast actually matters.
+            A wind-forecast tool for wind sports that grounds an LLM's answer in
+            real data instead of guesses. It resolves the folk names kiters and
+            sailors actually use — "3rd Ave", "Racetrack", "Crissy" — to the
+            launch-accurate coordinates where the forecast matters, then returns
+            structured conditions the model can only report, not invent.
           </p>
           <p>
-            The interesting part is the spot-resolution layer: free-text names
-            in, canonical spots out, with their coordinates, aliases, and region.
-            Today it runs as a small MCP server pulling live Open-Meteo forecasts
-            for a handful of Bay Area spots. The standalone resolution API and
-            curated gazetteer are still being built.
+            It runs as a Model Context Protocol server. Add it once as a custom
+            connector and the model stops searching the web for wind.
           </p>
-          <div class="tags" style="margin-top: 1.25rem">
+        </section>
+
+        <hr class="divider" />
+
+        <section>
+          <h2>Why bother</h2>
+          <p>
+            Ask Claude or ChatGPT what the wind is doing at a spot right now and
+            you get an answer that looks confident and isn't much use.
+          </p>
+          <ol class="prose-list">
+            <li>
+              <strong>It's slow.</strong> Thirty seconds or more of searching,
+              opening pages, hitting paywalls and thinking before anything comes
+              back.
+            </li>
+            <li>
+              <strong>It answers a different question.</strong> A pretty weather
+              card showing the temperature and a week of sun icons, then three
+              paragraphs of prose. I asked about the wind.
+            </li>
+            <li>
+              <strong>It gets the place wrong.</strong> Ask about Richmond and
+              you may get the middle of town rather than the marina or the
+              beach. Use a local spot name and it can miss the intent entirely.
+            </li>
+            <li>
+              <strong>Even when the spot is right, the numbers often aren't</strong>
+              — and there's no way to check them. The model is summarising
+              whatever pages it happened to land on, at whatever resolution
+              those pages publish.
+            </li>
+          </ol>
+        </section>
+
+        <section>
+          <h2>What the tool does instead</h2>
+          <ul class="prose-list">
+            <li>
+              <strong>Resolves the name first.</strong> Entity matching against
+              a gazetteer of spots and aliases — exact name, then alias, then a
+              live geocoder for anything it hasn't learned yet. Curated
+              coordinates are launch and riding points placed by hand, not the
+              geocoder's idea of the town.
+            </li>
+            <li>
+              <strong>Calls a real weather API.</strong> Current conditions plus
+              an hourly curve from Open-Meteo.
+            </li>
+            <li>
+              <strong>Returns structured data, not prose.</strong> Speed, gusts,
+              direction, temperature. The model writes the sentence; it doesn't
+              make up the number.
+            </li>
+            <li>
+              <strong>Several spots in one call.</strong>
+              "Crissy or Alameda today?" is a single round trip, back in a
+              second or two — quick enough to keep asking, and to pick before
+              you drive.
+            </li>
+          </ul>
+
+          <div class="compare">
+            <div class="panel">
+              <div class="panel-head">
+                <h3>Without the tool</h3>
+                <span class="time">30s+</span>
+              </div>
+              <div class="chat">
+                <p class="user">
+                  what's the kiteboarding conditions like right now at crissy
+                  field
+                </p>
+                <p class="tool">Searched the web</p>
+                <div class="wx">
+                  <div class="wx-top">
+                    <div class="place">Crissy Field, San Francisco, CA</div>
+                    <div class="temp">60°</div>
+                  </div>
+                  <div class="wx-days">
+                    <span>Mon<br />64°</span><span>Tue<br />65°</span
+                    ><span>Wed<br />65°</span><span>Thu<br />64°</span
+                    ><span>Fri<br />67°</span>
+                  </div>
+                </div>
+                <div class="reply">
+                  <p>
+                    Real-time numeric readouts for Crissy are stuck behind
+                    account walls or cached pages right now, so I don't have a
+                    fully reliable live number to hand you — but here's what
+                    I've got:
+                  </p>
+                  <p>
+                    <strong>Forecast model for today:</strong> wind out of the
+                    SW, roughly 5–13 mph, gusting to ~15 mph, clear skies, high
+                    around 63–64°F.
+                  </p>
+                  <p class="trail">
+                    That's on the light side for kiting — sounds like it's still
+                    in the pre-thermal window. Crissy's classic summer pattern
+                    is: light and patchy in the morning, filling in through
+                    early afternoon as the thermal gradient kicks in…
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div class="panel highlight">
+              <div class="panel-head">
+                <h3>With the tool</h3>
+                <span class="time">1–2s</span>
+              </div>
+              <div class="chat">
+                <p class="user">
+                  what's the kiteboarding conditions like right now at crissy
+                  field
+                </p>
+                <p class="tool">Get wind forecast</p>
+                <div class="reply">
+                  <p>
+                    Right now at Crissy Field:
+                    <strong
+                      >14 kt wind, gusting to 23 kt, out of the W (273°)</strong
+                    >, 60°F.
+                  </p>
+                  <p>
+                    That's solid, rideable wind — a classic clean westerly.
+                    Gusty enough (~9 kt spread) that you'll want to size down a
+                    bit or be ready to depower on the gusts.
+                  </p>
+                  <p>
+                    Heads up though — it's dropping through the evening: down to
+                    ~13 kt by 9pm and under 10 kt by 11pm. If you're heading
+                    out, sooner is better than later today.
+                  </p>
+                  <p class="attrib">
+                    Weather data by
+                    <a href="https://open-meteo.com" rel="noopener"
+                      >Open-Meteo.com</a
+                    >, CC BY 4.0
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+          <p class="muted" style="margin-top: 0.8rem; font-size: 0.88rem">
+            Same question, asked both ways. The left never found a live reading
+            at all.
+          </p>
+
+          <p style="margin-top: 1.5rem">
+            It's much nicer to talk to. When a trustworthy answer comes back
+            quickly, you keep going — "what about Alameda?", "and later?", "so
+            where should I drive?" — and it stays a conversation.
+          </p>
+          <p>
+            It can also
+            correct itself mid-conversation: every forecast is labelled with the
+            spot it resolved to, so a bad match is visible instead of silent —
+            asked about Point Richmond, the geocoder returned one in Wisconsin,
+            and the model caught it and sent another request with Point
+            Richmond, California.
+          </p>
+
+          <div class="chat transcript">
+            <div class="turn">
+              <p class="user">and point richmond?</p>
+              <p class="tool">
+                <span class="badge" aria-hidden="true">S</span> Get wind
+                forecast <span class="chev" aria-hidden="true">⌄</span>
+              </p>
+              <div class="jsonbox">
+                <span class="lbl">Response</span>
+                <pre>{
+  <span class="k">"forecasts"</span>: [
+    { <span class="k">"spot"</span>: <span class="s">"Point Richmond, Wisconsin"</span>,
+      <span class="k">"current"</span>: { <span class="k">"time"</span>: <span class="s">"2026-08-21T14:15"</span>,
+                   <span class="k">"wind_speed_kt"</span>: <span class="n">8.1</span>, … } }
+  ]
+}</pre>
+              </div>
+              <div class="reply">
+                <p>
+                  That geocoded to the wrong
+                  <strong>Point Richmond, Wisconsin</strong> — not the Bay Area
+                  one. I'll give it coordinates directly instead.
+                </p>
+              </div>
+            </div>
+
+            <div class="turn">
+              <p class="tool">
+                <span class="badge" aria-hidden="true">S</span> Get wind
+                forecast <span class="chev" aria-hidden="true">⌄</span>
+              </p>
+              <div class="jsonbox">
+                <span class="lbl">Request</span>
+                <pre>{
+  <span class="k">"spots"</span>: [
+    { <span class="k">"name"</span>: <span class="s">"Point Richmond, CA"</span>,
+      <span class="k">"lat"</span>: <span class="n">37.9089</span>, <span class="k">"lon"</span>: <span class="n">-122.3703</span>,
+      <span class="k">"estimated"</span>: <span class="n">true</span> }
+  ]
+}</pre>
+              </div>
+              <div class="reply">
+                <p>
+                  These are my best-guess coordinates for Point Richmond, CA —
+                  not a verified location like Crissy, so take it as a rough
+                  estimate.
+                </p>
+                <p>
+                  With that caveat: <strong>10–10.5 kt, gusting to 12</strong>,
+                  out of the SSW/SW right now. It's actually trending
+                  <em>down</em> through the afternoon — dropping to just
+                  <strong>3–8 kt</strong> by 5–6pm, pretty patchy and light. Not
+                  a great window there today.
+                </p>
+              </div>
+            </div>
+          </div>
+          <p class="muted" style="margin-top: 0.8rem; font-size: 0.88rem">
+            The model uses its own context to self correct, seen also in rows 5
+            and 6 below.
+          </p>
+
+          <p>
+            Every call is logged with its match, tier and confidence to continue
+            improving the tool. 
+          </p>
+          <p>Six recent calls:</p>
+
+          <div class="table-scroll">
+            <table class="log">
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>Query</th>
+                  <th>Outcome</th>
+                  <th>Match</th>
+                  <th>Tier</th>
+                  <th>Score</th>
+                  <th>Source</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td class="num">1</td>
+                  <td>Crissy Field</td>
+                  <td>resolved</td>
+                  <td>exact</td>
+                  <td>curated</td>
+                  <td class="score">1.0</td>
+                  <td>gazetteer.name</td>
+                </tr>
+                <tr>
+                  <td class="num">2</td>
+                  <td>Alameda</td>
+                  <td>resolved</td>
+                  <td>alias</td>
+                  <td>curated</td>
+                  <td class="score">0.95</td>
+                  <td>gazetteer.alias</td>
+                </tr>
+                <tr>
+                  <td class="num">3</td>
+                  <td>Crissy Field</td>
+                  <td>resolved</td>
+                  <td>exact</td>
+                  <td>curated</td>
+                  <td class="score">1.0</td>
+                  <td>gazetteer.name</td>
+                </tr>
+                <tr class="weak">
+                  <td class="num">4</td>
+                  <td>Keller Cove</td>
+                  <td>resolved</td>
+                  <td>geocoded</td>
+                  <td>geocoded</td>
+                  <td class="score">0.4</td>
+                  <td>geocode.nominatim</td>
+                </tr>
+                <tr class="weak">
+                  <td class="num">5</td>
+                  <td>Point Richmond</td>
+                  <td>resolved</td>
+                  <td>geocoded</td>
+                  <td>geocoded</td>
+                  <td class="score">0.4</td>
+                  <td>geocode.open-meteo</td>
+                </tr>
+                <tr>
+                  <td class="num">6</td>
+                  <td>Point Richmond, CA</td>
+                  <td>caller_coords</td>
+                  <td>—</td>
+                  <td>—</td>
+                  <td class="score">—</td>
+                  <td>—</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <p style="margin-top: 1.25rem">
+            The first three rows matched successfully, row 4 shows a low
+            confidence response from plain maps lookup, and the last two show
+            the model correcting itself and calling with exact coordinates from
+            the interaction above. 
+          </p>
+
+          <p style="margin-top: 1.75rem">
+            <strong>What's coming next:</strong> increased coverage, better
+            ranking, improvements driven by demand, confidence score in the
+            response, and more!
+          </p>
+
+          <div class="tags" style="margin-top: 1.5rem">
             <span class="tag">Python</span>
             <span class="tag">MCP</span>
-            <span class="tag">NLP</span>
-            <span class="tag">SQLite</span>
+            <span class="tag">NLP / entity resolution</span>
+            <span class="tag">SQLite + FTS5</span>
             <span class="tag">Open-Meteo</span>
           </div>
         </section>
