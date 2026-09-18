@@ -1,0 +1,3 @@
+# Cloudflare Pages redirects. Read at deploy time, not served to visitors.
+/projects/grounding /projects/wind-spots/ 301
+/projects/grounding/ /projects/wind-spots/ 301

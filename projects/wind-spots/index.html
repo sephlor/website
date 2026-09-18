@@ -3,12 +3,12 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Grounding — Steven Taylor</title>
+    <title>Wind Spots — Steven Taylor</title>
     <meta
       name="description"
-      content="Grounding — an MCP server that gives an LLM real wind forecasts for kitesurfing and sailing spots, resolving folk spot names to launch-accurate coordinates and answering in 1–2 seconds."
+      content="Wind Spots — an MCP server that gives an LLM real wind forecasts for kitesurfing and sailing spots, resolving folk spot names to launch-accurate coordinates and answering in 1–2 seconds."
     />
-    <link rel="canonical" href="https://stevenjtaylor.com/projects/grounding/" />
+    <link rel="canonical" href="https://stevenjtaylor.com/projects/wind-spots/" />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="stylesheet" href="/styles.css" />
   </head>
@@ -27,24 +27,39 @@
       <div class="wrap">
         <a class="back-link" href="/projects/">← All projects</a>
 
-        <section id="grounding">
-          <h1>🪁 Grounding</h1>
+        <section id="wind-spots">
+          <h1>🪁 Wind Spots</h1>
           <p class="muted" style="margin-top: -0.25rem; font-size: 0.9rem">
-            Work in progress · v1
+            Work in progress
           </p>
 
-          <a
-            class="arrow-link"
-            href="https://github.com/sephlor/grounding"
-            target="_blank"
-            rel="noopener"
-          >
-            View on GitHub
-            <span class="arrow" aria-hidden="true">→</span>
-          </a>
-          <p class="muted" style="margin-top: 0.4rem; font-size: 0.95rem">
-            <strong>Coming soon:</strong> Reach out for a link if want to try it now.
-          </p>
+          <p style="margin-bottom: 0.4rem"><strong>Try it out:</strong></p>
+          <ul class="prose-list" style="list-style: none; padding-left: 0">
+            <li>
+              <a
+                class="arrow-link"
+                style="margin-top: 0"
+                href="https://wind.stevenjtaylor.com/chat"
+                target="_blank"
+                rel="noopener"
+              >
+                In the chat
+                <span class="arrow" aria-hidden="true">→</span>
+              </a>
+            </li>
+            <li>
+              <button
+                class="copy-btn"
+                type="button"
+                data-copy="https://wind.stevenjtaylor.com/mcp/OldCywW4hl31yvEcbyiPboCDKpFYcqo9"
+              >
+                Copy MCP server URL
+              </button>
+              <span class="muted" style="font-size: 0.95rem">
+                — add it to your own agent as a custom connector.
+              </span>
+            </li>
+          </ul>
 
           <figure class="shot">
             <img
@@ -102,14 +117,15 @@
         </section>
 
         <section>
-          <h2>What the tool does instead</h2>
+          <h2>What the tool does</h2>
           <ul class="prose-list">
             <li>
               <strong>Resolves the name first.</strong> Entity matching against
               a gazetteer of spots and aliases — exact name, then alias, then a
               live geocoder for anything it hasn't learned yet. Curated
               coordinates are launch and riding points placed by hand, not the
-              geocoder's idea of the town.
+              geocoder's idea of the town. When several places share a name, a
+              rough location from the model puts the nearest one first.
             </li>
             <li>
               <strong>Calls a real weather API.</strong> Current conditions plus
@@ -216,20 +232,29 @@
             at all.
           </p>
 
-          <p style="margin-top: 1.5rem">
-            It's much nicer to talk to. When a trustworthy answer comes back
-            quickly, you keep going — "what about Alameda?", "and later?", "so
-            where should I drive?" — and it stays a conversation.
-          </p>
-          <p>
-            It can also
-            correct itself mid-conversation: every forecast is labelled with the
-            spot it resolved to, so a bad match is visible instead of silent —
-            asked about Point Richmond, the geocoder returned one in Wisconsin,
-            and the model caught it and sent another request with Point
-            Richmond, California.
-          </p>
-
+          <h2>What the model does</h2>
+          <ul class="prose-list">
+            <li>
+              <strong>It's nicer to talk to.</strong> When a trustworthy answer
+              comes back quickly, you keep going — "what about Alameda?", "and
+              later?", "so where should I drive?" — and it stays a
+              conversation.
+            </li>
+            <li>
+              <strong>Understands what you mean.</strong> You ask the way you
+              would ask a friend: "is OB working?", "A4 after work?", "3rd Ave
+              this weekend?". The model works out the spot, the hours and
+              roughly where you are, and hands those to the tool in your own
+              words.
+            </li>
+            <li>
+              <strong>Corrects itself or clarifies.</strong> Every forecast is
+              labelled with the spot it resolved to, so a bad match is visible
+              instead of silent. When a name could be several places, the
+              model asks which one. When the tool lands on the wrong one, it
+              notices and tries again.
+            </li>
+          </ul>
           <div class="chat transcript">
             <div class="turn">
               <p class="user">and point richmond?</p>
@@ -292,11 +317,95 @@
             and 6 below.
           </p>
 
+          <p style="margin-top: 1.5rem">
+            It also uses what you've told it about where you are. Plenty of
+            windy coastlines have a Kite Beach. Say which island or city
+            you're in and the model passes that along, so the same two words
+            find the one near you.
+          </p>
+
+          <div class="chat transcript">
+            <div class="turn">
+              <p class="user">I'm on Maui. How's Kite Beach right now?</p>
+              <p class="tool">
+                <span class="badge" aria-hidden="true">S</span> Get wind
+                forecast <span class="chev" aria-hidden="true">⌄</span>
+              </p>
+              <div class="jsonbox">
+                <span class="lbl">Request</span>
+                <pre>{
+  <span class="k">"spots"</span>: [<span class="s">"Kite Beach"</span>],
+  <span class="k">"near"</span>: { <span class="k">"lat"</span>: <span class="n">20.9</span>, <span class="k">"lon"</span>: <span class="n">-156.5</span> }
+}</pre>
+              </div>
+              <div class="jsonbox">
+                <span class="lbl">Response</span>
+                <pre>{
+  <span class="k">"forecasts"</span>: [
+    { <span class="k">"spot"</span>: <span class="s">"Kanaha Beach"</span>, <span class="k">"slug"</span>: <span class="s">"kanaha-beach"</span>,
+      <span class="k">"match_type"</span>: <span class="s">"alias"</span>, <span class="k">"distance_km"</span>: <span class="n">6.5</span>,
+      <span class="k">"current"</span>: { <span class="k">"time"</span>: <span class="s">"2026-10-13T14:30"</span>,
+                   <span class="k">"wind_speed_kt"</span>: <span class="n">15.6</span>, … } }
+  ]
+}</pre>
+              </div>
+              <div class="reply">
+                <p>
+                  Kite Beach on Maui is Kanaha Beach, and it's on: about 16
+                  knots out of the east-northeast at 2:30 PM, with gusts up to
+                  32. It eases through the afternoon, down to around 10 knots
+                  by 6 PM.
+                </p>
+              </div>
+            </div>
+
+            <div class="turn">
+              <p class="user">
+                I'm in Cape Town. How's Kite Beach looking this afternoon?
+              </p>
+              <p class="tool">
+                <span class="badge" aria-hidden="true">S</span> Get wind
+                forecast <span class="chev" aria-hidden="true">⌄</span>
+              </p>
+              <div class="jsonbox">
+                <span class="lbl">Request</span>
+                <pre>{
+  <span class="k">"spots"</span>: [<span class="s">"Kite Beach"</span>],
+  <span class="k">"near"</span>: { <span class="k">"lat"</span>: <span class="n">-33.9</span>, <span class="k">"lon"</span>: <span class="n">18.4</span> },
+  <span class="k">"start"</span>: <span class="s">"afternoon"</span>
+}</pre>
+              </div>
+              <div class="jsonbox">
+                <span class="lbl">Response</span>
+                <pre>{
+  <span class="k">"forecasts"</span>: [
+    { <span class="k">"spot"</span>: <span class="s">"Dolphin Beach"</span>, <span class="k">"slug"</span>: <span class="s">"dolphin-beach"</span>,
+      <span class="k">"match_type"</span>: <span class="s">"alias"</span>, <span class="k">"distance_km"</span>: <span class="n">10.8</span>,
+      <span class="k">"hourly"</span>: [ { <span class="k">"time"</span>: <span class="s">"2026-10-14T14:00"</span>,
+                    <span class="k">"wind_speed_kt"</span>: <span class="n">10.3</span>, … }, … ] }
+  ]
+}</pre>
+              </div>
+              <div class="reply">
+                <p>
+                  Kite Beach in Cape Town is Dolphin Beach. This afternoon it
+                  sits around 10 knots out of the west-northwest from noon
+                  through 5 PM, but it's gusty, with gusts of 24 to 27.
+                </p>
+              </div>
+            </div>
+          </div>
+          <p class="muted" style="margin-top: 0.8rem; font-size: 0.88rem">
+            Same name, two oceans. The location only orders the candidates; it
+            never filters one out. Rows 7 and 8 below.
+          </p>
+
+          <h2>Finding out where it's wrong</h2>
           <p>
             Every call is logged with its match, tier and confidence to continue
             improving the tool. 
           </p>
-          <p>Six recent calls:</p>
+          <p>Eight recent calls:</p>
 
           <div class="table-scroll">
             <table class="log">
@@ -339,7 +448,7 @@
                   <td class="score">1.0</td>
                   <td>gazetteer.name</td>
                 </tr>
-                <tr class="weak">
+                <tr>
                   <td class="num">4</td>
                   <td>Keller Cove</td>
                   <td>resolved</td>
@@ -348,7 +457,7 @@
                   <td class="score">0.4</td>
                   <td>geocode.nominatim</td>
                 </tr>
-                <tr class="weak">
+                <tr>
                   <td class="num">5</td>
                   <td>Point Richmond</td>
                   <td>resolved</td>
@@ -366,28 +475,75 @@
                   <td class="score">—</td>
                   <td>—</td>
                 </tr>
+                <tr>
+                  <td class="num">7</td>
+                  <td>Kite Beach (near Maui)</td>
+                  <td>resolved</td>
+                  <td>alias</td>
+                  <td>curated</td>
+                  <td class="score">0.95</td>
+                  <td>gazetteer.alias</td>
+                </tr>
+                <tr>
+                  <td class="num">8</td>
+                  <td>Kite Beach (near Cape Town)</td>
+                  <td>resolved</td>
+                  <td>alias</td>
+                  <td>community</td>
+                  <td class="score">0.95</td>
+                  <td>gazetteer.alias</td>
+                </tr>
               </tbody>
             </table>
           </div>
 
-          <p style="margin-top: 1.25rem">
-            The first three rows matched successfully, row 4 shows a low
-            confidence response from plain maps lookup, and the last two show
-            the model correcting itself and calling with exact coordinates from
-            the interaction above. 
+          <p>
+            Two sets of evals run offline, before and after every change.
           </p>
+          <ul class="prose-list">
+            <li>
+              <strong>The resolver on its own.</strong> A hand-written set of
+              queries (typos, homonyms, non-spots, places outside the
+              gazetteer) is scored against a saved baseline, so a change
+              shows exactly which rows moved. About 98% pass today.
+            </li>
+            <li>
+              <strong>The whole agent.</strong> A model is given a rider's
+              question and the tool, and a program checks the run: the right
+              spot, the right hours, and only numbers the tool returned. In a
+              recent run about five in six came through clean.
+            </li>
+            <li>
+              <strong>Real questions feed back in.</strong> Conversations on
+              the chat page are logged in the same format as eval runs, and
+              any exchange can be turned into a new eval question.
+            </li>
+          </ul>
+
+          <h2>How it runs</h2>
+          <ul class="prose-list">
+            <li>
+              <strong>Deployed, not just a script.</strong> Docker Compose on a
+              VPS behind Caddy for TLS.
+            </li>
+            <li>
+              <strong>Kept inside the free tier.</strong> Outbound Open-Meteo
+              calls are capped per day, so a busy day can't run past the quota.
+            </li>
+          </ul>
 
           <p style="margin-top: 1.75rem">
             <strong>What's coming next:</strong> increased coverage, better
-            ranking, improvements driven by demand, confidence score in the
-            response, and more!
+            ranking, improvements driven by demand, and more!
           </p>
 
           <div class="tags" style="margin-top: 1.5rem">
             <span class="tag">Python</span>
             <span class="tag">MCP</span>
             <span class="tag">NLP / entity resolution</span>
-            <span class="tag">SQLite + FTS5</span>
+            <span class="tag">Evals</span>
+            <span class="tag">Docker</span>
+            <span class="tag">SQLite</span>
             <span class="tag">Open-Meteo</span>
           </div>
         </section>
@@ -399,5 +555,6 @@
         <span>© 2026 Steven Taylor</span>
       </div>
     </footer>
+    <script src="/copy.js" defer></script>
   </body>
 </html>
