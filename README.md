@@ -10,12 +10,14 @@ To change something, edit the file and re-deploy. That's it.
 | `index.html`                    | Home page (intro + location + social links)            |
 | `projects/index.html`           | Projects list → `/projects/` (one card per project)    |
 | `projects/barkive/index.html`   | Barkive project → `/projects/barkive/`                 |
-| `projects/grounding/index.html` | Grounding project → `/projects/grounding/`             |
+| `projects/wind-spots/index.html` | Wind Spots project → `/projects/wind-spots/`          |
 | `styles.css`                    | Shared styles (edit `:root` at the top to reskin)      |
 | `images/`                       | Screenshots / photos used by the pages                 |
 | `favicon.svg`                   | Tab icon (a blue “S” — swap whenever)                  |
 | `404.html`                      | Shown for unknown URLs                                  |
 | `_headers`                      | Security headers, applied by Cloudflare Pages          |
+| `_redirects`                    | Redirects for moved pages, applied by Cloudflare Pages |
+| `copy.js`                       | Copy-to-clipboard buttons                              |
 | `robots.txt`                    | Search engines allowed; AI crawlers asked to stay out  |
 | `sitemap.xml`                   | List of pages for search engines                       |
 | `preview.sh`                    | Local preview server (below)                           |

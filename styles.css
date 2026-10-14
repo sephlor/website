@@ -281,6 +281,22 @@ a:hover {
   transform: translateX(4px);
 }
 
+/* Copies its data-copy value to the clipboard (see /copy.js) */
+.copy-btn {
+  font: inherit;
+  font-size: 1.08rem;
+  font-weight: 600;
+  padding: 0;
+  color: var(--accent);
+  background: none;
+  border: 0;
+  cursor: pointer;
+}
+
+.copy-btn:hover {
+  color: var(--accent-hover);
+}
+
 /* ---------- Project cards ---------- */
 .card-grid {
   display: grid;
